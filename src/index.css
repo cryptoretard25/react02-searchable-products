@@ -1,24 +1,30 @@
 :root {
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
   font-size: 10px;
-  
 }
 
-ol, ul{
+* {
+  box-sizing: border-box;
+}
+
+ol,
+ul {
   padding-left: 20px;
 }
 
-li{
+li {
   margin: 3px;
 }
 
-*{
+* {
   margin: 0;
 }
 
-h1, h2, h3, h4{
+h1,
+h2,
+h3,
+h4 {
   margin: 0;
 }
 
@@ -29,6 +35,11 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
 }
 
 code {
