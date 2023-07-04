@@ -1,26 +1,55 @@
 import "./App.css";
 import { useState } from "react";
-import { data, groupDataByCategory, deepObjCopy } from "./backend.js";
+import {
+  data,
+  state,
+  deepObjCopy,
+  groupDataByCategory,
+  filterDataByInput,
+  filterDataByStocked,
+} from "./backend.js";
 
-function Search() {
+function Search({ data, onSearch }) {
+
+  const handler = () => {
+    const dataCopy = deepObjCopy(data);
+    let temp;
+    if (state.value) {
+      const filteredByInput = filterDataByInput(state.value, dataCopy);
+      temp = state.checked
+        ? filterDataByStocked(filteredByInput)
+        : filteredByInput;
+    } else {
+      temp = state.checked ? filterDataByStocked(dataCopy) : dataCopy;
+    }
+    onSearch(temp);
+  };
+
+  const handleKeyUp = (e) => {
+    state.value = e.target.value;
+    handler();
+  };
+
+  const handleCheckBox = (e) => {
+    state.checked = e.target.checked;
+    handler();
+  };
+
   return (
     <div className="search-box">
-      <input type="text" placeholder="Search..." />
+      <input type="text" placeholder="Search..." onKeyUp={handleKeyUp} />
       <label>
-        <input type="checkbox" />
+        <input type="checkbox" onChange={handleCheckBox} />
         Only show products in stock
       </label>
     </div>
   );
 }
 
-function Content() {
-  const [products, setProducts] = useState(data);
-  const groupedByCat = groupDataByCategory(products);
-
+function Content({ processedData }) {
   return (
     <div className="content-box">
-      {groupedByCat.map((category, index) => {
+      {processedData.map((category, index) => {
         return (
           <div key={[index]}>
             <Category name={category[0].category} />
@@ -51,15 +80,26 @@ function Product({ product }) {
   );
 }
 
-function App() {
+function FilterableProductTable({ data }) {
+  const groupedByCat = groupDataByCategory(data);
+  const [products, setProducts] = useState(groupedByCat);
+
+  const onSearch = (array) => {
+    setProducts(array);
+  };
+
   return (
     <div className="App">
-      <Search />
+      <Search data={groupedByCat} onSearch={onSearch} />
       <div className="label">Name</div>
       <div className="label">Price</div>
-      <Content />
+      <Content processedData={products} />
     </div>
   );
+}
+
+function App() {
+  return <FilterableProductTable data={data} />;
 }
 
 export default App;
