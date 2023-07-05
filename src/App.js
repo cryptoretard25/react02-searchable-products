@@ -29,10 +29,10 @@ function Category({ name }) {
   return <div className="content-category">{name}</div>;
 }
 
-function Content({ content }) {
+function Content({ filteredData }) {
   return (
     <div className="content-box">
-      {content.map((category, index) => {
+      {filteredData.map((category, index) => {
         return (
           <div key={[index]}>
             <Category name={category[0].category} />
@@ -46,17 +46,30 @@ function Content({ content }) {
   );
 }
 
-function Search() {
+function Search({ filterText, setFilterText, setFilteredData, groupedData }) {
+ const onSearch = (e) => {
+   const newText = e.target.value;
+   setFilterText(newText, () => {
+     console.log(newText);
+     // Выполните другие действия, используя обновленное значение filterText
+     // if (newText) {
+     //   setFilteredData(filterDataByInput(newText, groupedData));
+     // } else {
+     //   setFilteredData(groupedData);
+     // }
+   });
+ };
 
   return (
     <div className="search-box">
       <input
         type="text"
         placeholder="Search..."
-        value={state.value}
+        value={filterText}
+        onChange={onSearch}
       />
       <label>
-        <input type="checkbox"/>
+        <input type="checkbox" />
         Only show products in stock
       </label>
     </div>
@@ -65,13 +78,20 @@ function Search() {
 
 function FilterableProductTable({ data }) {
   const groupedData = groupDataByCategory(data);
+  const [filterText, setFilterText] = useState("");
+  const [filteredData, setFilteredData] = useState(groupedData);
 
   return (
     <div className="App">
-      <Search />
+      <Search
+        filterText={filterText}
+        setFilterText={setFilterText}
+        setFilteredData={setFilteredData}
+        groupedData={groupedData}
+      />
       <div className="label">Name</div>
       <div className="label">Price</div>
-      <Content content={groupedData} />
+      <Content filteredData={filteredData} />
     </div>
   );
 }
