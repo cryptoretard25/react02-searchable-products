@@ -1,10 +1,5 @@
 import fakeFetch from "./mock/mockup";
 
-const state = {
-  value: '',
-  checked: false
-}
-
 const data = await (async () => {
   return await fakeFetch();
 })();
@@ -63,7 +58,6 @@ const deepObjCopy = (obj) => {
 
 export {
   data,
-  state,
   deepObjCopy,
   groupDataByCategory,
   filterDataByInput,

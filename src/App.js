@@ -2,8 +2,6 @@ import "./App.css";
 import { useState } from "react";
 import {
   data,
-  state,
-  deepObjCopy,
   groupDataByCategory,
   filterDataByInput,
   filterDataByStocked,
@@ -29,7 +27,20 @@ function Category({ name }) {
   return <div className="content-category">{name}</div>;
 }
 
-function Content({ filteredData }) {
+function Content({ groupedData, filterText, isStocked }) {
+  const filteredData = (() => {
+    if (isStocked) {
+      const filteredByStocked = filterDataByStocked(groupedData);
+      return filterText
+        ? filterDataByInput(filterText, filteredByStocked)
+        : filteredByStocked;
+    } else {
+      return filterText
+        ? filterDataByInput(filterText, groupedData)
+        : groupedData;
+    }
+  })();
+
   return (
     <div className="content-box">
       {filteredData.map((category, index) => {
@@ -46,30 +57,21 @@ function Content({ filteredData }) {
   );
 }
 
-function Search({ filterText, setFilterText, setFilteredData, groupedData }) {
- const onSearch = (e) => {
-   const newText = e.target.value;
-   setFilterText(newText, () => {
-     console.log(newText);
-     // Выполните другие действия, используя обновленное значение filterText
-     // if (newText) {
-     //   setFilteredData(filterDataByInput(newText, groupedData));
-     // } else {
-     //   setFilteredData(groupedData);
-     // }
-   });
- };
-
+function Search({ filterText, setFilterText, isStocked, setIsStocked }) {
   return (
     <div className="search-box">
       <input
         type="text"
         placeholder="Search..."
         value={filterText}
-        onChange={onSearch}
+        onChange={(e) => setFilterText(e.target.value)}
       />
       <label>
-        <input type="checkbox" />
+        <input
+          type="checkbox"
+          value={isStocked}
+          onChange={(e) => setIsStocked(e.target.checked)}
+        />{" "}
         Only show products in stock
       </label>
     </div>
@@ -79,19 +81,23 @@ function Search({ filterText, setFilterText, setFilteredData, groupedData }) {
 function FilterableProductTable({ data }) {
   const groupedData = groupDataByCategory(data);
   const [filterText, setFilterText] = useState("");
-  const [filteredData, setFilteredData] = useState(groupedData);
+  const [isStocked, setIsStocked] = useState(false);
 
   return (
     <div className="App">
       <Search
         filterText={filterText}
         setFilterText={setFilterText}
-        setFilteredData={setFilteredData}
-        groupedData={groupedData}
+        isStocked={isStocked}
+        setIsStocked={setIsStocked}
       />
       <div className="label">Name</div>
       <div className="label">Price</div>
-      <Content filteredData={filteredData} />
+      <Content
+        groupedData={groupedData}
+        filterText={filterText}
+        isStocked={isStocked}
+      />
     </div>
   );
 }
