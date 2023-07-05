@@ -9,52 +9,30 @@ import {
   filterDataByStocked,
 } from "./backend.js";
 
-// function Search({ data, onSearch }) {
+function Product({ product }) {
+  const productName = () =>
+    product.stocked ? (
+      <div style={{ color: "red" }}>{product.name}</div>
+    ) : (
+      <div>{product.name}</div>
+    );
 
-//   const handler = () => {
-//     const dataCopy = deepObjCopy(data);
-//     let temp;
-//     if (state.value) {
-//       const filteredByInput = filterDataByInput(state.value, dataCopy);
-//       temp = state.checked
-//         ? filterDataByStocked(filteredByInput)
-//         : filteredByInput;
-//     } else {
-//       temp = state.checked ? filterDataByStocked(dataCopy) : dataCopy;
-//     }
-//     onSearch(temp);
-//   };
+  return (
+    <div className="content-row">
+      {productName()}
+      <div>{product.price}</div>
+    </div>
+  );
+}
 
-//   const handleOnChange = (e) => {
-//     state.value = e.target.value;
-//     handler();
-//   };
+function Category({ name }) {
+  return <div className="content-category">{name}</div>;
+}
 
-//   const handleCheckBoxChange = (e) => {
-//     state.checked = e.target.checked;
-//     handler();
-//   };
-
-//   return (
-//     <div className="search-box">
-//       <input
-//         type="text"
-//         placeholder="Search..."
-//         onChange={handleOnChange}
-//         value={state.value}
-//       />
-//       <label>
-//         <input type="checkbox" onChange={handleCheckBoxChange} />
-//         Only show products in stock
-//       </label>
-//     </div>
-//   );
-// }
-
-function Content({ processedData }) {
+function Content({ content }) {
   return (
     <div className="content-box">
-      {processedData.map((category, index) => {
+      {content.map((category, index) => {
         return (
           <div key={[index]}>
             <Category name={category[0].category} />
@@ -68,37 +46,32 @@ function Content({ processedData }) {
   );
 }
 
-function Category({ name }) {
-  return <div className="content-category">{name}</div>;
-}
+function Search() {
 
-function Product({ product }) {
   return (
-    <div className="content-row">
-      {product.stocked ? (
-        <div style={{ color: "red" }}>{product.name}</div>
-      ) : (
-        <div>{product.name}</div>
-      )}
-      <div>{product.price}</div>
+    <div className="search-box">
+      <input
+        type="text"
+        placeholder="Search..."
+        value={state.value}
+      />
+      <label>
+        <input type="checkbox"/>
+        Only show products in stock
+      </label>
     </div>
   );
 }
 
 function FilterableProductTable({ data }) {
-  const groupedByCat = groupDataByCategory(data);
-  const [products, setProducts] = useState(groupedByCat);
-
-  const onSearch = (array) => {
-    setProducts(array);
-  };
+  const groupedData = groupDataByCategory(data);
 
   return (
     <div className="App">
-      <Search data={groupedByCat} onSearch={onSearch} />
+      <Search />
       <div className="label">Name</div>
       <div className="label">Price</div>
-      <Content processedData={products} />
+      <Content content={groupedData} />
     </div>
   );
 }
