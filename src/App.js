@@ -9,42 +9,47 @@ import {
   filterDataByStocked,
 } from "./backend.js";
 
-function Search({ data, onSearch }) {
+// function Search({ data, onSearch }) {
 
-  const handler = () => {
-    const dataCopy = deepObjCopy(data);
-    let temp;
-    if (state.value) {
-      const filteredByInput = filterDataByInput(state.value, dataCopy);
-      temp = state.checked
-        ? filterDataByStocked(filteredByInput)
-        : filteredByInput;
-    } else {
-      temp = state.checked ? filterDataByStocked(dataCopy) : dataCopy;
-    }
-    onSearch(temp);
-  };
+//   const handler = () => {
+//     const dataCopy = deepObjCopy(data);
+//     let temp;
+//     if (state.value) {
+//       const filteredByInput = filterDataByInput(state.value, dataCopy);
+//       temp = state.checked
+//         ? filterDataByStocked(filteredByInput)
+//         : filteredByInput;
+//     } else {
+//       temp = state.checked ? filterDataByStocked(dataCopy) : dataCopy;
+//     }
+//     onSearch(temp);
+//   };
 
-  const handleKeyUp = (e) => {
-    state.value = e.target.value;
-    handler();
-  };
+//   const handleOnChange = (e) => {
+//     state.value = e.target.value;
+//     handler();
+//   };
 
-  const handleCheckBox = (e) => {
-    state.checked = e.target.checked;
-    handler();
-  };
+//   const handleCheckBoxChange = (e) => {
+//     state.checked = e.target.checked;
+//     handler();
+//   };
 
-  return (
-    <div className="search-box">
-      <input type="text" placeholder="Search..." onKeyUp={handleKeyUp} />
-      <label>
-        <input type="checkbox" onChange={handleCheckBox} />
-        Only show products in stock
-      </label>
-    </div>
-  );
-}
+//   return (
+//     <div className="search-box">
+//       <input
+//         type="text"
+//         placeholder="Search..."
+//         onChange={handleOnChange}
+//         value={state.value}
+//       />
+//       <label>
+//         <input type="checkbox" onChange={handleCheckBoxChange} />
+//         Only show products in stock
+//       </label>
+//     </div>
+//   );
+// }
 
 function Content({ processedData }) {
   return (

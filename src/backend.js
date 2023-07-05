@@ -1,7 +1,7 @@
 import fakeFetch from "./mock/mockup";
 
 const state = {
-  value: null,
+  value: '',
   checked: false
 }
 
