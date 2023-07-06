@@ -69,7 +69,7 @@ function Search({ filterText, setFilterText, isStocked, setIsStocked }) {
       <label>
         <input
           type="checkbox"
-          value={isStocked}
+          checked={isStocked}
           onChange={(e) => setIsStocked(e.target.checked)}
         />{" "}
         Only show products in stock
